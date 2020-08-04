@@ -2,9 +2,9 @@ import type {Friend, FriendWithId} from '../../types/handlers/friends.ts';
 import {formatResponse, removeMongoId} from '../utils/mod.ts';
 import MongoDBClient from '../clients/MongoClient.ts';
 
-const {MONGO_HOST, MONGO_PORT} = Deno.env.toObject();
+const {MONGO_HOST, MONGO_PORT, MONGO_DB_NAME} = Deno.env.toObject();
 const mClient = new MongoDBClient({host: MONGO_HOST || 'mongodb://localhost', port: Number(MONGO_PORT) || 27017});
-const friendsCollection = mClient.database('crud').collection<Friend>('friends');
+const friendsCollection = mClient.database(MONGO_DB_NAME || 'AwesomeCollection').collection<Friend>('friends');
 
 export const getFriends = async ({response}: {response:any}) => {
   response.body = formatResponse({status: 200, payload: removeMongoId(await friendsCollection.find({id: {$ne: null}}))})
