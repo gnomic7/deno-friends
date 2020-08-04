@@ -1,0 +1,1 @@
+export {getFriends, getFriend, storeFriend, updateFriend, removeFriend } from './friends.ts';
