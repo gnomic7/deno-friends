@@ -7,12 +7,12 @@ const mClient = new MongoDBClient({host: MONGO_HOST || 'mongodb://localhost', po
 const friendsCollection = mClient.database(MONGO_DB_NAME || 'AwesomeCollection').collection<Friend>('friends');
 
 export const getFriends = async ({response}: {response:any}) => {
-  response.body = formatResponse({status: 200, payload: removeMongoId(await friendsCollection.find({id: {$ne: null}}))})
+  response.body = formatResponse({status: 200, payload: await friendsCollection.find({id: {$ne: null}})})
 }
 
 export const getFriend = async ({params: {id}, response}: {params: {id: string}, response:any}) => {
   const resp =
-  response.body = formatResponse({status: 200, payload: removeMongoId(await friendsCollection.find({id}))})
+  response.body = formatResponse({status: 200, payload: await friendsCollection.find({id})})
 }
 
 export const storeFriend = async ({request,response }: {request: any, response:any}) => {
@@ -42,7 +42,7 @@ export const updateFriend = async ({params: {id},request, response}: {params: {i
   if (type === 'json') {
     const insPayload = await value;
     await friendsCollection.updateOne({id}, {$set: insPayload})
-    response.body = formatResponse({status: 201, payload: removeMongoId(await friendsCollection.find({id}))})
+    response.body = formatResponse({status: 201, payload: await friendsCollection.find({id})})
     return;
   }
   response.status = 400;
