@@ -5,10 +5,6 @@ import MongoDBClient from '../clients/MongoClient.ts';
 const {MONGO_HOST, MONGO_PORT} = Deno.env.toObject();
 const mClient = new MongoDBClient({host: MONGO_HOST || 'mongodb://localhost', port: Number(MONGO_PORT) || 27017});
 const friendsCollection = mClient.database('crud').collection<Friend>('friends');
-const friends: Friend[] = [
-  { name: "Anshi", age: 5, isTeen: false, id: 'e1e1c17e-6bbc-484f-9759-811b6ae5b73c' },
-{ name: "Jannu", age: 25, isTeen: false, id: '5ca0603e-71e6-4aab-a6c9-e8f533ad1e3d' },
-{ name: "Joe", age: 15, isTeen: true, id: '953d821b-c397-49fc-9610-60afea105540' }]
 
 export const getFriends = async ({response}: {response:any}) => {
   response.body = formatResponse({status: 200, payload: removeMongoId(await friendsCollection.find({id: {$ne: null}}))})
